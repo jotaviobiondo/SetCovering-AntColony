@@ -1,2 +1,2 @@
-# SetCovering-AntColony
-Algoritmo ACO usando multithread para o problema de cobertura de conjuntos.
+# Ant Colony Optimization Multithread
+Algoritmo ACO utilizando multithread para a resolução do problema de cobertura de conjuntos (set cover problem).
