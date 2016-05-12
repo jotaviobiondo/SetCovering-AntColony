@@ -4,6 +4,8 @@
 #include "aco.h"
 #include "util.h"
 
+char *nomeArquivo;
+
 instancia_t lerArquivo(char *nome){
 	int i, j;
 	instancia_t inst;
@@ -48,13 +50,14 @@ instancia_t lerArquivo(char *nome){
 	inst.coluna = (int**)(malloc(inst.c * sizeof(int*)));
 	int cont[inst.c];
 	for (i = 0; i < inst.c; i++){
-		inst.coluna[i] = (int*)(malloc(inst.nlinhas[i]));
+		inst.coluna[i] = (int*)(malloc(inst.nlinhas[i] * sizeof(int)));
 		cont[i] = 0;
 	}
-
+	
+	int k;
 	for (i = 0; i < inst.l; i++){
 		for (j = 0; j < inst.ncolunas[i]; j++){
-			int k = inst.linha[i][j];
+			k = inst.linha[i][j];
 			inst.coluna[k][cont[k]] = i;
 			cont[k]++;
 		}
@@ -64,8 +67,23 @@ instancia_t lerArquivo(char *nome){
 	return inst;
 }
 
-int main(int argc, char const *argv[]){
-	inst = lerArquivo("../Instancias/scp41.txt");
+void lerArgumentos(int argc, char *argv[]){
+	if (argc == 1){
+		erroSair("ERRO: Necessario informar o nome do arquivo de instancia.");
+	}
+	else if (argc == 2){
+		nomeArquivo = argv[1];
+	}
+	else {
+		erroSair("ERRO: Quantidade de argumentos incorreto.");
+	}
+}
+
+int main(int argc, char *argv[]){
+	lerArgumentos(argc, argv);
+	char caminho[32] = "../Instancias/";
+	strcat(caminho, nomeArquivo);
+	inst = lerArquivo(caminho);
 	printf("%d %d\n", inst.l, inst.c);
 	/*int i;
 	for (i = 1; i <= inst.c; ++i){
