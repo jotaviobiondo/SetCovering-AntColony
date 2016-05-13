@@ -43,7 +43,7 @@ instancia_t lerArquivo(char *nome){
 				erroSair("ERRO: Nao foi possivel ler colunas.");
 			}
 			inst.linha[i][j]--;
-			inst.nlinhas[inst.linha[i][j]]++;	// contando numero de linhas que sao cobertas pela coluna
+			inst.nlinhas[inst.linha[i][j]]++;   // contando numero de linhas que sao cobertas pela coluna
 		}
 	}
 
@@ -68,7 +68,15 @@ instancia_t lerArquivo(char *nome){
 }
 
 void mostrarAjuda(){
-	printf("AJUDAAAAAAAAA\n");
+	//colocar --alfa=ALFA  [default] 
+	printf("\
+	Uso: aco <nome_arquivo.txt> <opcoes>\n\
+	-h, --help                  mostra tela de ajuda.\n\
+	-a, --alfa=ALFA             seta a variavel alfa do algoritmo.\n\
+	-b, --beta=BETA             seta a variavel beta do algoritmo.\n\
+	-r, --rho=RHO               seta a variavel rho do algoritmo.\n\
+	-f, --feromonio=FEROMONIO   seta a variavel de feromonio do algoritmo.\n\
+	-c, --ciclos=CICLOS         seta o numero de ciclos da condicao de parada do algoritmo.\n") ;
 	exit(-1);
 }
 
@@ -95,7 +103,7 @@ void lerArgumentos(int argc, char *argv[]){
 				mostrarAjuda();
 				break;
 			case 'a':
-				
+
 				break;
 			case 'b':
 				
@@ -136,7 +144,7 @@ int main(int argc, char *argv[]){
 	strcat(caminho, nomeArquivo);
 
 	inst = lerArquivo(caminho);
-	
+
 	printf("%d %d\n", inst.l, inst.c);
 	/*int i;
 	for (i = 1; i <= inst.c; ++i){
