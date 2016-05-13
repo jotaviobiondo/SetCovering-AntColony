@@ -3,7 +3,7 @@
 #include <string.h>
 #include "aco.h"
 #include "util.h"
-
+#include <getopt.h>
 char *nomeArquivo;
 
 instancia_t lerArquivo(char *nome){
@@ -67,8 +67,58 @@ instancia_t lerArquivo(char *nome){
 	return inst;
 }
 
+void mostrarAjuda(){
+	printf("AJUDAAAAAAAAA\n");
+	exit(-1);
+}
+
 void lerArgumentos(int argc, char *argv[]){
-	if (argc == 1){
+	int opt;
+
+	/*if (argc < 12){
+		mostrarAjuda();
+	}*/
+
+	const struct option opcoes[] = {
+		{"help", no_argument, 0, 'h'},
+		{"alfa", required_argument, 0, 'a'},
+		{"beta", required_argument, 0, 'b'},
+		{"rho", required_argument, 0, 'r'},
+		{"feromonio", required_argument, 0, 'f'},
+		{"ciclos", required_argument , 0, 'c'},
+		{0, 0, 0, 0},
+	};
+
+	while((opt = getopt_long(argc, argv, "ha:b:r:f:c:", opcoes, NULL)) != -1) {
+		switch (opt) {
+			case 'h':
+				mostrarAjuda();
+				break;
+			case 'a':
+				
+				break;
+			case 'b':
+				
+				break;
+			case 'r':
+				
+				break;
+			case 'f':
+				
+				break;
+			case 'c':
+				
+				break;
+			default:
+				mostrarAjuda();
+				return;
+		}
+	}
+
+	if (optind < argc){
+		nomeArquivo = argv[optind++];
+	}
+	/*if (argc == 1){
 		erroSair("ERRO: Necessario informar o nome do arquivo de instancia.");
 	}
 	else if (argc == 2){
@@ -76,14 +126,17 @@ void lerArgumentos(int argc, char *argv[]){
 	}
 	else {
 		erroSair("ERRO: Quantidade de argumentos incorreto.");
-	}
+	}*/
 }
 
 int main(int argc, char *argv[]){
 	lerArgumentos(argc, argv);
+
 	char caminho[32] = "../Instancias/";
 	strcat(caminho, nomeArquivo);
+
 	inst = lerArquivo(caminho);
+	
 	printf("%d %d\n", inst.l, inst.c);
 	/*int i;
 	for (i = 1; i <= inst.c; ++i){
