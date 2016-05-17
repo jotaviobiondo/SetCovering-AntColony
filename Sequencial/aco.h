@@ -1,6 +1,8 @@
 #ifndef ACO_H
 #define ACO_H
 
+#include "lista.h"
+
 /* STRUCT DA INSTANCIA DO PROBLEMA */
 struct Instancia{
     int l;          // número de linhas
@@ -18,7 +20,7 @@ extern instancia_t instancia;
 
 /* STRUCT FORMIGA */
 struct Formiga {
-    int *colunas;               // colunas que pertencem a solução
+    lista_t *colunas;           // colunas que pertencem a solução
     int custo_total;            // custo total da solução
     int *qtd_colunaCobreLinha;  // quantidade de colunas que cobrem a linha i
 };
@@ -29,6 +31,7 @@ typedef struct Formiga formiga_t;
 extern double alfa;
 extern double beta;
 extern double rho;      // determina quanto do feromônio deve evaporar
+extern double q0;       // Ferômonio inicial
 
 extern int n_formigas;
 extern int n_ciclos;

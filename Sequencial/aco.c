@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lista.h"
 #include "util.h"
 
 instancia_t instancia;
@@ -18,16 +19,19 @@ int n_ciclos;
 formiga_t *lista_formigas;
 double *feromonio;
 
-void inicializarParametros(){
+void inicializarFormiga(formiga_t *formiga){
+    formiga->colunas = lista_criar();
+    formiga->qtd_colunaCobreLinha = (int*)(calloc(instancia.l, sizeof(int)));
+}
+
+void inicializarVariaveis(){
     lista_formigas = (formiga_t*)(malloc(n_formigas * sizeof(formiga_t)));
     feromonio = (double*)(malloc(instancia.c * sizeof(double)));
 
-    alfa = 1.0;
-    beta = 2.0;
-    rho = 0.1;
-    q0 = 1.0;    
-    n_formigas = 10;
-    n_ciclos = 100;
+    int i;
+    for (i = 0; i < n_formigas; ++i){
+        inicializarFormiga(&lista_formigas[i]);
+    }
 }
 
 void inicializarFeromonio(){
@@ -38,7 +42,7 @@ void inicializarFeromonio(){
 }
 
 void ant_colony(){
-    inicializarParametros();
+    inicializarVariaveis();
     inicializarFeromonio();
 
     int i;

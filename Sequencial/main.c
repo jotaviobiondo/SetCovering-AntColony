@@ -84,11 +84,11 @@ void mostrarAjuda(){
 void lerArgumentos(int argc, char *argv[]){
 	int opt;
 
-	alfa = 0;
+	/*alfa = 0;
 	beta = 0;
 	rho = 0;
 	n_formigas = 0;
-	n_ciclos = 0;
+	n_ciclos = 0;*/
 
 	const struct option opcoes[] = {
 		{"help", no_argument, 0, 'h'},
@@ -136,7 +136,17 @@ void lerArgumentos(int argc, char *argv[]){
 	}*/
 }
 
+void inicializarParametros(){
+	alfa = 1.0;
+    beta = 2.0;
+    rho = 0.1;
+    q0 = 1.0;
+    n_formigas = 10;
+    n_ciclos = 100;
+}
+
 int main(int argc, char *argv[]){
+	inicializarParametros();
 	lerArgumentos(argc, argv);
 
 	char caminho[32] = "../Instancias/";
