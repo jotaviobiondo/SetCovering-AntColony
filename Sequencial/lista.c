@@ -12,6 +12,14 @@ lista_t* lista_criar(){
     return lista;
 }
 
+lista_t* lista_criarTam(int tam){
+    lista_t *lista = (lista_t*) malloc(sizeof(lista_t));
+    lista->elem = (int*) malloc(tam * sizeof(int));
+    lista->tamMax = tam;
+    lista->tam = 0;
+    return lista;
+}
+
 void crescerLista(lista_t *lista){
     lista->tamMax *= 2;
     int *ptr = (int*) realloc(lista->elem, lista->tamMax * sizeof(int));
@@ -48,6 +56,10 @@ int lista_remove(lista_t *lista, int pos){
 
 int lista_obter(lista_t *lista, int pos){
     return lista->elem[pos];
+}
+
+int lista_vazia(lista_t *lista){
+    return lista->tam == 0;
 }
 
 void lista_free(lista_t *lista){

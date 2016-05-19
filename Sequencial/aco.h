@@ -16,8 +16,6 @@ struct Instancia{
 
 typedef struct Instancia instancia_t;
 
-extern instancia_t instancia;
-
 /* STRUCT FORMIGA */
 struct Formiga {
     lista_t *colunas;           // colunas que pertencem a solução
@@ -38,6 +36,6 @@ extern int n_ciclos;
 
 /* FUNÇÔES */
 
-void ant_colony();
+void ant_colony(instancia_t inst);
 
 #endif

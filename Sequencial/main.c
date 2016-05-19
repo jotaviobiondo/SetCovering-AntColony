@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <getopt.h>
 #include "aco.h"
 #include "util.h"
-#include <getopt.h>
 
 char *nomeArquivo;
 
@@ -146,18 +147,24 @@ void inicializarParametros(){
 }
 
 int main(int argc, char *argv[]){
+	srand((unsigned)time(NULL));
+	/*timeval t1;
+	gettimeofday(&t1, NULL);
+	srand(t1.tv_usec * t1.tv_sec);*/
+	//printf("%lf\n", random_double());
+
 	inicializarParametros();
 	lerArgumentos(argc, argv);
 
 	char caminho[32] = "../Instancias/";
 	strcat(caminho, nomeArquivo);
 
-	instancia = lerArquivo(caminho);
+	instancia_t instancia = lerArquivo(caminho);
 
 	printf("\nDados da instancia:\n");
 	printf("Linhas: %d\nColunas: %d\n", instancia.l, instancia.c);
 
-	ant_colony();
+	ant_colony(instancia);
 	
 	return 0;
 }
