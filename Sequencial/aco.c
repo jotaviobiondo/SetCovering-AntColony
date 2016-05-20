@@ -24,6 +24,7 @@ double *feromonio;          // vetor do feromonio depositado em cada coluna
 void inicializarFormiga(formiga_t *formiga){
     formiga->colunas = lista_criar();
     formiga->qtd_colunaCobreLinha = (int*)(calloc(instancia.l, sizeof(int)));
+    formiga->custo_total = 0;
 }
 
 void inicializarVariaveis(){
@@ -92,6 +93,18 @@ int maximizarProbabilidade(int linha, lista_t *linhasDescobertas, formiga_t *for
     return melhorColuna;
 }
 
+void addColuna(formiga_t *formiga, int coluna, lista_t *linhasDescobertas){
+    lista_insere(formiga->colunas, coluna);
+    formiga->custo_total += instancia.custo[coluna];
+    
+    int i;
+    for (i = 0; i < instancia.nlinhas[coluna]; i++){
+        int linha = instancia.coluna[coluna][i];
+        formiga->qtd_colunaCobreLinha[linha]++;
+        lista_removeElem(linhasDescobertas, linha);
+    }
+}
+
 void construirSolucao(formiga_t *formiga){
     int i;
     lista_t *linhasDescobertas = lista_criarTam(instancia.l);
@@ -104,8 +117,8 @@ void construirSolucao(formiga_t *formiga){
         int linha = lista_obter(linhasDescobertas, rand_int);
 
         int melhorColuna = maximizarProbabilidade(linha, linhasDescobertas, formiga);
+        addColuna(formiga, melhorColuna, linhasDescobertas);
     }
-    
 }
 
 void eliminarRedundancia(formiga_t *formiga){
@@ -116,8 +129,10 @@ void construirSolucoesFormigas(){
     int i;
     for (i = 0; i < n_formigas; ++i){
         construirSolucao(&lista_formigas[i]);
+        //printf("custo: %d\n", lista_formigas[i].custo_total);
         eliminarRedundancia(&lista_formigas[i]);
     }
+
 }
 
 void ant_colony(instancia_t inst){
@@ -126,8 +141,8 @@ void ant_colony(instancia_t inst){
     inicializarFeromonio();
 
     int i;
-    for (i = 0; i < n_ciclos; ++i){
+    //for (i = 0; i < n_ciclos; ++i){
         construirSolucoesFormigas();
         //atualizarFeromonio();
-    }
+    //}
 }
