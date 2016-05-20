@@ -48,6 +48,7 @@ void inicializarFeromonio(){
 
 double heuristica(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
     int tam_intersec = tam_intersecao(instancia.coluna[coluna], linhasDescobertas->elem, instancia.nlinhas[coluna], linhasDescobertas->tam);
+
     double visibilidade = (double) tam_intersec / instancia.custo[coluna];
     return visibilidade;
 }
@@ -58,13 +59,23 @@ double calcularProbabilidade(int coluna, formiga_t *formiga, lista_t *linhasDesc
     }
 
     double h = heuristica(coluna, formiga, linhasDescobertas);
-    double numerador = pow(feromonio[coluna], alfa) + pow(h, beta);
+    double numerador = pow(feromonio[coluna], alfa) * pow(h, beta);
 
-    
+    // TALVEZ MELHORAR ISSO
+    int i;
+    double denominador = 0.0;
+    for (i = 0; i < instancia.c; i++){
+        if (!lista_contem(formiga->colunas, i)){
+            h = heuristica(i, formiga, linhasDescobertas);
+            denominador += pow(feromonio[i], alfa) * pow(h, beta);
+        }
+    }
+
+    return numerador / denominador;
 }
 
 int maximizarProbabilidade(int linha, lista_t *linhasDescobertas, formiga_t *formiga){
-    int i, coluna, custo;
+    int i, coluna;
     double probabilidade;
     double maior = 0.0;
     int melhorColuna = -1;
