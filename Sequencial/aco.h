@@ -7,10 +7,10 @@
 struct Instancia{
     int l;          // número de linhas
     int c;          // número de colunas
-    int **coluna;   // coluna[i] contém as linhas cobertas pela coluna i
+    int **coluna;   // coluna[j] contém as linhas cobertas pela coluna j
     int **linha;    // linha[i] contém as colunas que cobrem a linha i
     int *ncolunas;  // ncolunas[i] é o número de colunas que cobrem a linha i
-    int *nlinhas;   // nlinhas[i] é o número de linhas que são cobertas pela coluna i
+    int *nlinhas;   // nlinhas[j] é o número de linhas que são cobertas pela coluna j
     int *custo;     // vetor de custos de cada coluna
 };
 
