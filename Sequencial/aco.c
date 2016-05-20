@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include <math.h>
 #include "lista.h"
 #include "util.h"
 
@@ -46,6 +46,35 @@ void inicializarFeromonio(){
     }
 }
 
+double calcularProbabilidade(int coluna, int custo, formiga_t *formiga){
+    int i;
+    for (i = 0; i < formiga->colunas->tam; i++){
+        if (coluna == lista_obter(formiga->colunas, i)){
+            return 0.0;
+        }
+    }
+
+    
+}
+
+int maximizarProbabilidade(int linha, lista_t *linhasDescobertas, formiga_t *formiga){
+    int i, coluna, custo;
+    double probabilidade;
+    double maior = 0.0;
+    int melhorColuna = -1;
+    for (i = 0; i < instancia.ncolunas[linha]; i++){
+        coluna = instancia.linha[linha][i];
+        custo = instancia.custo[coluna];
+
+        probabilidade = calcularProbabilidade(coluna, custo, formiga);
+        if (probabilidade > maior){
+            maior = probabilidade;
+            melhorColuna = coluna;
+        }
+    }
+
+    return melhorColuna;
+}
 
 void construirSolucao(formiga_t *formiga){
     int i;
@@ -55,7 +84,10 @@ void construirSolucao(formiga_t *formiga){
     }
 
     while (!lista_vazia(linhasDescobertas)){
-        
+        int rand_int = random_int(linhasDescobertas->tam);
+        int linha = lista_obter(linhasDescobertas, rand_int);
+
+        int melhorColuna = maximizarProbabilidade(linha, linhasDescobertas, formiga);
     }
     
 }

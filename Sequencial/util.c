@@ -18,3 +18,8 @@ double random_double(){
     
     return out;
 }
+
+int random_int(int limite){
+    int rand_int = rand() % limite;
+    return rand_int;
+}

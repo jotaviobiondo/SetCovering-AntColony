@@ -54,8 +54,30 @@ int lista_remove(lista_t *lista, int pos){
     return ret;
 }
 
+int lista_removeElem(lista_t *lista, int elem){
+    int i;
+    for (i = 0; i < lista->tam; i++){
+        if (lista->elem[i] == elem){
+            lista_remove(lista, i);
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 int lista_obter(lista_t *lista, int pos){
     return lista->elem[pos];
+}
+
+int lista_contem(lista_t *lista, int elem){
+    int i;
+    for (i = 0; i < lista->tam; i++){
+        if (lista->elem[i] == elem){
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int lista_vazia(lista_t *lista){

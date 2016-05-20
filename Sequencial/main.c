@@ -152,6 +152,8 @@ int main(int argc, char *argv[]){
 	gettimeofday(&t1, NULL);
 	srand(t1.tv_usec * t1.tv_sec);*/
 	//printf("%lf\n", random_double());
+	//printf("%d\n", random_int(10));
+
 
 	inicializarParametros();
 	lerArgumentos(argc, argv);
