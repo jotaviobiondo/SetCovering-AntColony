@@ -26,9 +26,9 @@ struct Formiga {
 typedef struct Formiga formiga_t;
 
 /* PARÂMETROS */
-extern double alfa;
-extern double beta;
-extern double rho;      // determina quanto do feromônio deve evaporar
+extern double alfa;     // influência no feromônio
+extern double beta;     // influência na heurística
+extern double rho;      // taxa de evaporação
 extern double q0;       // Ferômonio inicial
 
 extern int n_formigas;
@@ -37,5 +37,6 @@ extern int n_ciclos;
 /* FUNÇÔES */
 
 void ant_colony(instancia_t inst);
+void inicializar_parametros();
 
 #endif

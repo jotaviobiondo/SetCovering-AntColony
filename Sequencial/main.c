@@ -70,20 +70,23 @@ instancia_t lerArquivo(char *nome){
 }
 
 void mostrarAjuda(){
-	//colocar --alfa=ALFA  [default] 
 	printf("\n\
 	Uso: aco <nome_arquivo.txt> <opcoes>\n\
 	-h, --help                  mostra tela de ajuda.\n\
-	-a, --alfa=ALFA             seta a variavel alfa do algoritmo.\n\
-	-b, --beta=BETA             seta a variavel beta do algoritmo.\n\
-	-r, --rho=RHO               seta a variavel rho do algoritmo.\n\
-	-f, --formigas=FORMIGAS     seta o numero de formigas do algoritmo.\n\
-	-c, --ciclos=CICLOS         seta o numero de ciclos da condicao de parada do algoritmo.\n") ;
+	-a, --alfa=ALFA             [%.2f] seta a variavel alfa (importancia do feromonio) do algoritmo.\n\
+	-b, --beta=BETA             [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
+	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
+	-f, --formigas=FORMIGAS     [%d] seta o numero de formigas do algoritmo.\n\
+	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n", alfa, beta, rho, n_formigas, n_ciclos) ;
 	exit(-1);
 }
 
 void lerArgumentos(int argc, char *argv[]){
 	int opt;
+
+	if (argc < 2){
+		mostrarAjuda();
+	}
 
 	const struct option opcoes[] = {
 		{"help", no_argument, 0, 'h'},
@@ -131,15 +134,6 @@ void lerArgumentos(int argc, char *argv[]){
 	}*/
 }
 
-void inicializarParametros(){
-	alfa = 1.0;
-    beta = 1.0;
-    rho = 0.2;
-    q0 = 1.0;
-    n_formigas = 10;
-    n_ciclos = 10;
-}
-
 int main(int argc, char *argv[]){
 	srand((unsigned)time(NULL));
 	/*timeval t1;
@@ -149,7 +143,7 @@ int main(int argc, char *argv[]){
 	//printf("%d\n", random_int(10));
 
 
-	inicializarParametros();
+	inicializar_parametros();
 	lerArgumentos(argc, argv);
 
 	char caminho[32] = "../Instancias/";
@@ -159,6 +153,12 @@ int main(int argc, char *argv[]){
 
 	printf("\nDados da instancia:\n");
 	printf("Linhas: %d\nColunas: %d\n", instancia.l, instancia.c);
+	printf("\nParametros:\n");
+	printf("Alfa = %.2f\n", alfa);
+	printf("Beta = %.2f\n", beta);
+	printf("Rho = %.2f\n", rho);
+	printf("Numero de formigas = %d\n", n_formigas);
+	printf("Numero de ciclos = %d\n\n", n_ciclos);
 
 	ant_colony(instancia);
 	

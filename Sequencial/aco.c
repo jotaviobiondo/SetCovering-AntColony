@@ -11,10 +11,10 @@
 instancia_t instancia;
 
 /* PARÂMETROS */
-double alfa;
-double beta;
-double rho;
-double q0;       // Ferômonio inicial
+double alfa;    // influência no feromônio
+double beta;    // influência na heurística
+double rho;     // taxa de evaporação
+double q0;      // ferômonio inicial
 
 int n_formigas;
 int n_ciclos;
@@ -44,9 +44,7 @@ void inicializarVariaveis(){
         inicializarFormiga(&lista_formigas[i]);
     }
 
-    //inicializarFormiga(&melhor_formiga);
     melhor_formiga.custo_total = INT_MAX;
-
     somaCustosFormigas = 0;
 
     feromonio = (double*)(malloc(instancia.c * sizeof(double)));
@@ -59,43 +57,68 @@ void inicializarFeromonio(){
     }
 }
 
-double heuristica(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
+double heuristica(int coluna, lista_t *linhasDescobertas){
     int tam_intersec = tam_intersecao(instancia.coluna[coluna], linhasDescobertas->elem, instancia.nlinhas[coluna], linhasDescobertas->tam);
 
     double visibilidade = (double) tam_intersec / instancia.custo[coluna];
     return visibilidade;
 }
 
-double calcularProbabilidade(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
+/*double calcularProbabilidade(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
     if (lista_contem(formiga->colunas, coluna)){
         return 0.0;
     }
 
-    double h = heuristica(coluna, formiga, linhasDescobertas);
+    double h = heuristica(coluna, linhasDescobertas);
     double numerador = pow(feromonio[coluna], alfa) * pow(h, beta);
 
-    // TALVEZ MELHORAR ISSO
     int i;
     double denominador = 0.0;
     for (i = 0; i < instancia.c; i++){
         if (!lista_contem(formiga->colunas, i)){
-            h = heuristica(i, formiga, linhasDescobertas);
+            h = heuristica(i, linhasDescobertas);
             denominador += pow(feromonio[i], alfa) * pow(h, beta);
         }
     }
 
     return numerador / denominador;
+}*/
+
+double calcProbNumerador(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
+    if (lista_contem(formiga->colunas, coluna)){
+        return 0.0;
+    }
+
+    double h = heuristica(coluna, linhasDescobertas);
+    double numerador = pow(feromonio[coluna], alfa) * pow(h, beta);
+    return numerador;
+}
+
+double calcProbDenominador(formiga_t *formiga, lista_t *linhasDescobertas){
+    int i;
+    double denominador = 0.0, h;
+    for (i = 0; i < instancia.c; i++){
+        if (!lista_contem(formiga->colunas, i)){
+            h = heuristica(i, linhasDescobertas);
+            denominador += pow(feromonio[i], alfa) * pow(h, beta);
+        }
+    }
+    return denominador;
 }
 
 int maximizarProbabilidade(int linha, lista_t *linhasDescobertas, formiga_t *formiga){
     int i, coluna;
-    double probabilidade;
+    double probabilidade, numerador, denominador;
     double maior = 0.0;
     int melhorColuna = -1;
+    denominador = calcProbDenominador(formiga, linhasDescobertas);
     for (i = 0; i < instancia.ncolunas[linha]; i++){
         coluna = instancia.linha[linha][i];
 
-        probabilidade = calcularProbabilidade(coluna, formiga, linhasDescobertas);
+        //probabilidade = calcularProbabilidade(coluna, formiga, linhasDescobertas);
+        numerador = calcProbNumerador(coluna, formiga, linhasDescobertas);
+        probabilidade = numerador / denominador;
+
         if (probabilidade > maior){
             maior = probabilidade;
             melhorColuna = coluna;
@@ -133,7 +156,7 @@ void construirSolucao(formiga_t *formiga){
     for (i = 0; i < instancia.l; i++){
         lista_insere(linhasDescobertas, i);
     }
-
+    
     while (!lista_vazia(linhasDescobertas)){
         int rand_int = random_int(linhasDescobertas->tam);
         int linha = lista_obter(linhasDescobertas, rand_int);
@@ -157,7 +180,7 @@ int colunaRedundante(formiga_t *formiga, int coluna){
 void eliminarRedundancia(formiga_t *formiga){
     lista_t *T = lista_criarTam(formiga->colunas->tam);
     int i;
-    for (i = 0; i < T->tam; i++){
+    for (i = 0; i < formiga->colunas->tam; i++){
         lista_insere(T, formiga->colunas->elem[i]);
     }
 
@@ -165,7 +188,6 @@ void eliminarRedundancia(formiga_t *formiga){
         int coluna = T->elem[i];
         lista_remove(T, i);
         if (colunaRedundante(formiga, coluna)){
-            printf("REDUNDANTE\n");
             removeColuna(formiga, coluna);
         }
     }
@@ -175,9 +197,7 @@ void construirSolucoesFormigas(){
     int i;
     for (i = 0; i < n_formigas; ++i){
         construirSolucao(&lista_formigas[i]);
-        //printf("custo: %d\n", lista_formigas[i].custo_total);
         eliminarRedundancia(&lista_formigas[i]);
-        //printf("custo: %d\n", lista_formigas[i].custo_total);
         if (lista_formigas[i].custo_total < melhor_formiga.custo_total){
             melhor_formiga = lista_formigas[i];
         }
@@ -206,7 +226,7 @@ void depositarFeromonio(){
     for (i = 0; i < n_formigas; i++){
         for (j = 0; j < lista_formigas[i].colunas->tam; j++){
             int coluna = lista_formigas[i].colunas->elem[j];
-            feromonio[coluna] = feromonio[coluna] + (1 / somaCustosFormigas);
+            feromonio[coluna] = feromonio[coluna] + (lista_formigas[i].custo_total / somaCustosFormigas);
         }
     }
 }
@@ -223,10 +243,20 @@ void ant_colony(instancia_t inst){
 
     int i;
     for (i = 0; i < n_ciclos; ++i){
-        printf("Iteracao: %d\n", i);
+        printf("Ciclo: %d\n", i);
         construirSolucoesFormigas();
         atualizarFeromonio();
         resetarFormigas();
         printf("Melhor Formiga: %d\n", melhor_formiga.custo_total);
+        printf("-------------------------\n");
     }
+}
+
+void inicializar_parametros(){
+    alfa = 1.0;
+    beta = 1.0;
+    rho = 0.2;
+    q0 = 1.0;
+    n_formigas = 10;
+    n_ciclos = 10;
 }
