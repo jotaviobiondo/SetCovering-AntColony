@@ -18,5 +18,7 @@ int lista_obter(lista_t *lista, int pos);
 int lista_contem(lista_t *lista, int elem);
 int lista_vazia(lista_t *lista);
 void lista_free(lista_t *lista);
+void lista_resetar(lista_t *lista);
+
 
 #endif

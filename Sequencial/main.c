@@ -85,12 +85,6 @@ void mostrarAjuda(){
 void lerArgumentos(int argc, char *argv[]){
 	int opt;
 
-	/*alfa = 0;
-	beta = 0;
-	rho = 0;
-	n_formigas = 0;
-	n_ciclos = 0;*/
-
 	const struct option opcoes[] = {
 		{"help", no_argument, 0, 'h'},
 		{"alfa", required_argument, 0, 'a'},
@@ -140,7 +134,7 @@ void lerArgumentos(int argc, char *argv[]){
 void inicializarParametros(){
 	alfa = 1.0;
     beta = 1.0;
-    rho = 0.1;
+    rho = 0.2;
     q0 = 1.0;
     n_formigas = 10;
     n_ciclos = 10;

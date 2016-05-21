@@ -6,6 +6,8 @@
 #include "lista.h"
 #include "util.h"
 
+#define INT_MAX 2147483647
+
 instancia_t instancia;
 
 /* PARÂMETROS */
@@ -20,10 +22,17 @@ int n_ciclos;
 formiga_t *lista_formigas;
 formiga_t melhor_formiga;
 double *feromonio;          // vetor do feromonio depositado em cada coluna
+int somaCustosFormigas;     // soma dos custos de todas as formigas para deposito de feromonio
 
 void inicializarFormiga(formiga_t *formiga){
     formiga->colunas = lista_criar();
     formiga->qtd_colunaCobreLinha = (int*)(calloc(instancia.l, sizeof(int)));
+    formiga->custo_total = 0;
+}
+
+void resetarFormiga(formiga_t *formiga){
+    lista_resetar(formiga->colunas);
+    memset(formiga->qtd_colunaCobreLinha, 0, instancia.l * sizeof(int));
     formiga->custo_total = 0;
 }
 
@@ -35,7 +44,10 @@ void inicializarVariaveis(){
         inicializarFormiga(&lista_formigas[i]);
     }
 
-    inicializarFormiga(&melhor_formiga);
+    //inicializarFormiga(&melhor_formiga);
+    melhor_formiga.custo_total = INT_MAX;
+
+    somaCustosFormigas = 0;
 
     feromonio = (double*)(malloc(instancia.c * sizeof(double)));
 }
@@ -163,11 +175,45 @@ void construirSolucoesFormigas(){
     int i;
     for (i = 0; i < n_formigas; ++i){
         construirSolucao(&lista_formigas[i]);
-        printf("custo: %d\n", lista_formigas[i].custo_total);
+        //printf("custo: %d\n", lista_formigas[i].custo_total);
         eliminarRedundancia(&lista_formigas[i]);
-        printf("custo: %d\n", lista_formigas[i].custo_total);
+        //printf("custo: %d\n", lista_formigas[i].custo_total);
+        if (lista_formigas[i].custo_total < melhor_formiga.custo_total){
+            melhor_formiga = lista_formigas[i];
+        }
+        somaCustosFormigas += lista_formigas[i].custo_total;
+    }
+}
+
+void resetarFormigas(){
+    int i;
+    for (i = 0; i < n_formigas; i++){
+        resetarFormiga(&lista_formigas[i]);
     }
 
+    somaCustosFormigas = 0;
+}
+
+void evaporarFeromonio(){
+    int i;
+    for (i = 0; i < instancia.c; i++){
+        feromonio[i] = (1 - rho) * feromonio[i];
+    }
+}
+
+void depositarFeromonio(){
+    int i, j;
+    for (i = 0; i < n_formigas; i++){
+        for (j = 0; j < lista_formigas[i].colunas->tam; j++){
+            int coluna = lista_formigas[i].colunas->elem[j];
+            feromonio[coluna] = feromonio[coluna] + (1 / somaCustosFormigas);
+        }
+    }
+}
+
+void atualizarFeromonio(){
+    evaporarFeromonio();
+    depositarFeromonio();
 }
 
 void ant_colony(instancia_t inst){
@@ -176,8 +222,11 @@ void ant_colony(instancia_t inst){
     inicializarFeromonio();
 
     int i;
-    //for (i = 0; i < n_ciclos; ++i){
+    for (i = 0; i < n_ciclos; ++i){
+        printf("Iteracao: %d\n", i);
         construirSolucoesFormigas();
-        //atualizarFeromonio();
-    //}
+        atualizarFeromonio();
+        resetarFormigas();
+        printf("Melhor Formiga: %d\n", melhor_formiga.custo_total);
+    }
 }

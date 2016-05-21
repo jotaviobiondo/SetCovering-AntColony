@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INI_TAM 10
+#define INI_TAM 40
 
 lista_t* lista_criar(){
     lista_t *lista = (lista_t*) malloc(sizeof(lista_t));
@@ -87,5 +87,9 @@ int lista_vazia(lista_t *lista){
 void lista_free(lista_t *lista){
     free(lista->elem);
     free(lista);
+}
+
+void lista_resetar(lista_t *lista){
+    lista->tam = 0;
 }
 
