@@ -139,11 +139,11 @@ void lerArgumentos(int argc, char *argv[]){
 
 void inicializarParametros(){
 	alfa = 1.0;
-    beta = 2.0;
+    beta = 1.0;
     rho = 0.1;
     q0 = 1.0;
     n_formigas = 10;
-    n_ciclos = 100;
+    n_ciclos = 10;
 }
 
 int main(int argc, char *argv[]){

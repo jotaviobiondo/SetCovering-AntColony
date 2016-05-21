@@ -105,6 +105,16 @@ void addColuna(formiga_t *formiga, int coluna, lista_t *linhasDescobertas){
     }
 }
 
+void removeColuna(formiga_t *formiga, int coluna){
+    lista_removeElem(formiga->colunas, coluna);
+    formiga->custo_total = formiga->custo_total - instancia.custo[coluna];
+
+    int i;
+    for (i = 0; i < instancia.nlinhas[coluna]; i++){
+        formiga->qtd_colunaCobreLinha[instancia.coluna[coluna][i]]--;
+    }
+}
+
 void construirSolucao(formiga_t *formiga){
     int i;
     lista_t *linhasDescobertas = lista_criarTam(instancia.l);
@@ -121,16 +131,41 @@ void construirSolucao(formiga_t *formiga){
     }
 }
 
-void eliminarRedundancia(formiga_t *formiga){
+int colunaRedundante(formiga_t *formiga, int coluna){
+    int i, linha;
+    for (i = 0; i < instancia.nlinhas[coluna]; i++){
+        linha = instancia.coluna[coluna][i];
+        if (formiga->qtd_colunaCobreLinha[linha] < 2){
+            return 0;
+        }
+    }
+    return 1;
+}
 
+void eliminarRedundancia(formiga_t *formiga){
+    lista_t *T = lista_criarTam(formiga->colunas->tam);
+    int i;
+    for (i = 0; i < T->tam; i++){
+        lista_insere(T, formiga->colunas->elem[i]);
+    }
+
+    for (i = T->tam - 1; i >= 0; i--){
+        int coluna = T->elem[i];
+        lista_remove(T, i);
+        if (colunaRedundante(formiga, coluna)){
+            printf("REDUNDANTE\n");
+            removeColuna(formiga, coluna);
+        }
+    }
 }
 
 void construirSolucoesFormigas(){
     int i;
     for (i = 0; i < n_formigas; ++i){
         construirSolucao(&lista_formigas[i]);
-        //printf("custo: %d\n", lista_formigas[i].custo_total);
+        printf("custo: %d\n", lista_formigas[i].custo_total);
         eliminarRedundancia(&lista_formigas[i]);
+        printf("custo: %d\n", lista_formigas[i].custo_total);
     }
 
 }
