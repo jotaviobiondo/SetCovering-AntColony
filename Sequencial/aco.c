@@ -64,26 +64,6 @@ double heuristica(int coluna, lista_t *linhasDescobertas){
     return visibilidade;
 }
 
-/*double calcularProbabilidade(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
-    if (lista_contem(formiga->colunas, coluna)){
-        return 0.0;
-    }
-
-    double h = heuristica(coluna, linhasDescobertas);
-    double numerador = pow(feromonio[coluna], alfa) * pow(h, beta);
-
-    int i;
-    double denominador = 0.0;
-    for (i = 0; i < instancia.c; i++){
-        if (!lista_contem(formiga->colunas, i)){
-            h = heuristica(i, linhasDescobertas);
-            denominador += pow(feromonio[i], alfa) * pow(h, beta);
-        }
-    }
-
-    return numerador / denominador;
-}*/
-
 double calcProbNumerador(int coluna, formiga_t *formiga, lista_t *linhasDescobertas){
     if (lista_contem(formiga->colunas, coluna)){
         return 0.0;
@@ -115,7 +95,6 @@ int maximizarProbabilidade(int linha, lista_t *linhasDescobertas, formiga_t *for
     for (i = 0; i < instancia.ncolunas[linha]; i++){
         coluna = instancia.linha[linha][i];
 
-        //probabilidade = calcularProbabilidade(coluna, formiga, linhasDescobertas);
         numerador = calcProbNumerador(coluna, formiga, linhasDescobertas);
         probabilidade = numerador / denominador;
 
@@ -156,7 +135,7 @@ void construirSolucao(formiga_t *formiga){
     for (i = 0; i < instancia.l; i++){
         lista_insere(linhasDescobertas, i);
     }
-    
+
     while (!lista_vazia(linhasDescobertas)){
         int rand_int = random_int(linhasDescobertas->tam);
         int linha = lista_obter(linhasDescobertas, rand_int);
@@ -226,7 +205,8 @@ void depositarFeromonio(){
     for (i = 0; i < n_formigas; i++){
         for (j = 0; j < lista_formigas[i].colunas->tam; j++){
             int coluna = lista_formigas[i].colunas->elem[j];
-            feromonio[coluna] = feromonio[coluna] + (lista_formigas[i].custo_total / somaCustosFormigas);
+            //feromonio[coluna] = feromonio[coluna] + ((double)1.0 / somaCustosFormigas);
+            feromonio[coluna] = feromonio[coluna] + ((double)1.0 / lista_formigas[i].custo_total);
         }
     }
 }
@@ -253,10 +233,10 @@ void ant_colony(instancia_t inst){
 }
 
 void inicializar_parametros(){
-    alfa = 1.0;
-    beta = 1.0;
-    rho = 0.2;
+    alfa = 0.4;
+    beta = 0.8;
+    rho = 0.4;
     q0 = 1.0;
-    n_formigas = 10;
-    n_ciclos = 10;
+    n_formigas = 20;
+    n_ciclos = 15;
 }

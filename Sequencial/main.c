@@ -127,11 +127,6 @@ void lerArgumentos(int argc, char *argv[]){
 	if (optind < argc){
 		nomeArquivo = argv[optind++];
 	}
-
-	/*if (!alfa || !beta || !rho || !n_ciclos || !n_formigas || !nomeArquivo){
-		printf("\nERRO: Algum argumento nao foi especificado.\n");
-		mostrarAjuda();
-	}*/
 }
 
 int main(int argc, char *argv[]){
