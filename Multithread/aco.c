@@ -19,6 +19,8 @@ double q0;      // ferômonio inicial
 int n_formigas;
 int n_ciclos;
 
+int n_thread;
+
 formiga_t *lista_formigas;
 formiga_t melhor_formiga;
 double *feromonio;          // vetor do feromonio depositado em cada coluna
@@ -241,4 +243,5 @@ void inicializar_parametros(){
     q0 = 1.0;
     n_formigas = 20;
     n_ciclos = 15;
+    n_thread = 2;
 }

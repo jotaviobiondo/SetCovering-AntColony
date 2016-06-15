@@ -6,7 +6,7 @@
 #include "aco.h"
 #include "util.h"
 
-char *nomeArquivo;
+char *nomeArquivo = "scp41.txt";
 
 instancia_t lerArquivo(char *nome){
 	int i, j;
@@ -78,7 +78,8 @@ void mostrarAjuda(){
 	-b, --beta=BETA             [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
 	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
 	-f, --formigas=FORMIGAS     [%d] seta o numero de formigas do algoritmo.\n\
-	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n", alfa, beta, rho, n_formigas, n_ciclos) ;
+	-t, --thread=THREAD         [%d] seta o numero de threads do programa.\n\
+	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n", alfa, beta, rho, n_formigas, n_thread, n_ciclos) ;
 	exit(-1);
 }
 
@@ -95,12 +96,13 @@ void lerArgumentos(int argc, char *argv[]){
 		{"alfa", required_argument, 0, 'a'},
 		{"beta", required_argument, 0, 'b'},
 		{"rho", required_argument, 0, 'r'},
+		{"thread", required_argument, 0, 't'},
 		{"formigas", required_argument, 0, 'f'},
 		{"ciclos", required_argument , 0, 'c'},
 		{0, 0, 0, 0},
 	};
 
-	while((opt = getopt_long(argc, argv, "hva:b:r:f:c:", opcoes, NULL)) != -1) {
+	while((opt = getopt_long(argc, argv, "hva:b:r:f:t:c:", opcoes, NULL)) != -1) {
 		switch (opt) {
 			case 'h':
 				mostrarAjuda();
@@ -120,6 +122,9 @@ void lerArgumentos(int argc, char *argv[]){
 			case 'f':
 				n_formigas = atoi(optarg);
 				break;
+			case 't':
+				n_thread = atoi(optarg);
+				break;
 			case 'c':
 				n_ciclos = atoi(optarg);
 				break;
@@ -127,6 +132,10 @@ void lerArgumentos(int argc, char *argv[]){
 				mostrarAjuda();
 				return;
 		}
+	}
+
+	if (n_formigas % n_thread != 0){
+		erroSair("ERRO: O numero de formigas precisa ser multiplo do numero de thread.");
 	}
 
 	if (optind < argc){
@@ -142,7 +151,7 @@ int main(int argc, char *argv[]){
 	//printf("%lf\n", random_double());
 	//printf("%d\n", random_int(10));
 
-	verbose = false;
+
 	inicializar_parametros();
 	lerArgumentos(argc, argv);
 
