@@ -8,6 +8,8 @@
 
 char *nomeArquivo = "scp41.txt";
 
+pthread_t *thread;
+
 instancia_t lerArquivo(char *nome){
 	int i, j;
 	instancia_t inst;
@@ -79,7 +81,7 @@ void mostrarAjuda(){
 	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
 	-f, --formigas=FORMIGAS     [%d] seta o numero de formigas do algoritmo.\n\
 	-t, --thread=THREAD         [%d] seta o numero de threads do programa.\n\
-	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n", alfa, beta, rho, n_formigas, n_thread, n_ciclos) ;
+	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n\n", alfa, beta, rho, n_formigas, n_thread, n_ciclos) ;
 	exit(-1);
 }
 
@@ -143,22 +145,11 @@ void lerArgumentos(int argc, char *argv[]){
 	}
 }
 
-int main(int argc, char *argv[]){
-	srand((unsigned)time(NULL));
-	/*timeval t1;
-	gettimeofday(&t1, NULL);
-	srand(t1.tv_usec * t1.tv_sec);*/
-	//printf("%lf\n", random_double());
-	//printf("%d\n", random_int(10));
-
-
-	inicializar_parametros();
-	lerArgumentos(argc, argv);
-
+void inicializarInstancia(){
 	char caminho[32] = "../Instancias/";
 	strcat(caminho, nomeArquivo);
 
-	instancia_t instancia = lerArquivo(caminho);
+	instancia = lerArquivo(caminho);
 
 	VERBOSE("\nDados da instancia:\n");
 	VERBOSE("Arquivo: %s\nLinhas: %d\nColunas: %d\n", nomeArquivo, instancia.l, instancia.c);
@@ -168,8 +159,39 @@ int main(int argc, char *argv[]){
 	VERBOSE("Rho = %.2f\n", rho);
 	VERBOSE("Numero de formigas = %d\n", n_formigas);
 	VERBOSE("Numero de ciclos = %d\n\n", n_ciclos);
+}
 
-	ant_colony(instancia);
+void inicializarThreads(){
+	thread = (pthread_t*) (malloc(n_thread * sizeof(pthread_t)));
+	pthread_barrier_init(&b1, NULL, n_thread);
+	pthread_barrier_init(&b2, NULL, n_thread);
+}
+
+int main(int argc, char *argv[]){
+	srand((unsigned)time(NULL));
+
+	inicializar_parametros();
+
+	lerArgumentos(argc, argv);
+
+	inicializarInstancia();
+	
+	inicializarThreads();
+
+	inicializar_aco();
+
+	int i;
+	for (i = 0; i < n_thread; ++i){
+		int *arg = (int*) (malloc(sizeof(int)));
+		*arg = i;
+		pthread_create(&(thread[i]), NULL, ant_colony, (void*) arg);
+	}
+
+	for (i = 0; i < n_thread; ++i){
+		pthread_join(thread[i], NULL);
+	}
+
+	printf("\nMelhor Formiga: %d\n", melhor_formiga.custo_total);
 	
 	return 0;
 }

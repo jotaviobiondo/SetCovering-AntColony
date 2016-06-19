@@ -3,10 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 #include "lista.h"
 #include "util.h"
 
 #define INT_MAX 2147483647
+#define INICIO(id) id * formiga_por_thread
+#define FIM(id) INICIO(id) + formiga_por_thread
 
 instancia_t instancia;
 
@@ -21,10 +24,17 @@ int n_ciclos;
 
 int n_thread;
 
+int formiga_por_thread;
+
 formiga_t *lista_formigas;
-formiga_t melhor_formiga;
-double *feromonio;          // vetor do feromonio depositado em cada coluna
-int somaCustosFormigas;     // soma dos custos de todas as formigas para deposito de feromonio
+formiga_t melhor_formiga;    // Melhor formiga global
+formiga_t *melhor_formiga_thread;    // Melhor formiga para cada thread
+double *feromonio;                  // vetor do feromonio depositado em cada coluna
+
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_barrier_t b1;
+pthread_barrier_t b2;
 
 void inicializarFormiga(formiga_t *formiga){
     formiga->colunas = lista_criar();
@@ -38,25 +48,13 @@ void resetarFormiga(formiga_t *formiga){
     formiga->custo_total = 0;
 }
 
-void inicializarVariaveis(){
-    lista_formigas = (formiga_t*)(malloc(n_formigas * sizeof(formiga_t)));
-
+void inicializarVariaveis(int threadID){
     int i;
-    for (i = 0; i < n_formigas; ++i){
+    for (i = INICIO(threadID); i < FIM(threadID); ++i){
         inicializarFormiga(&lista_formigas[i]);
     }
 
-    melhor_formiga.custo_total = INT_MAX;
-    somaCustosFormigas = 0;
-
-    feromonio = (double*)(malloc(instancia.c * sizeof(double)));
-}
-
-void inicializarFeromonio(){
-    int i;
-    for (i = 0; i < instancia.c; i++){
-        feromonio[i] = q0;
-    }
+    melhor_formiga_thread[threadID].custo_total = INT_MAX;
 }
 
 double heuristica(int coluna, lista_t *linhasDescobertas){
@@ -174,66 +172,87 @@ void eliminarRedundancia(formiga_t *formiga){
     }
 }
 
-void construirSolucoesFormigas(){
+void construirSolucoesFormigas(int threadID){
     int i;
-    for (i = 0; i < n_formigas; ++i){
+    for (i = INICIO(threadID); i < FIM(threadID); ++i){
         construirSolucao(&lista_formigas[i]);
         eliminarRedundancia(&lista_formigas[i]);
-        if (lista_formigas[i].custo_total < melhor_formiga.custo_total){
-            melhor_formiga = lista_formigas[i];
+
+        if (lista_formigas[i].custo_total < melhor_formiga_thread[threadID].custo_total){
+            melhor_formiga_thread[threadID] = lista_formigas[i];
         }
-        somaCustosFormigas += lista_formigas[i].custo_total;
     }
 }
 
-void resetarFormigas(){
+void resetarFormigas(int threadID){
     int i;
-    for (i = 0; i < n_formigas; i++){
+    for (i = INICIO(threadID); i < FIM(threadID); i++){
         resetarFormiga(&lista_formigas[i]);
     }
-
-    somaCustosFormigas = 0;
 }
 
-void evaporarFeromonio(){
+//verificar aqui
+void evaporarFeromonio(int threadID){
     int i;
-    for (i = 0; i < instancia.c; i++){
+    int bloco = instancia.c / n_thread;
+    int inicio = threadID * bloco;
+    int fim;
+    if (threadID != n_thread - 1){
+        fim = inicio + bloco;
+    } else { // se for a ultima thread
+        fim = instancia.c;
+    }
+
+    for (i = inicio; i < fim; i++){
         feromonio[i] = (1 - rho) * feromonio[i];
     }
 }
 
-void depositarFeromonio(){
+//verificar aqui
+void depositarFeromonio(int threadID){
     int i, j;
-    for (i = 0; i < n_formigas; i++){
+    for (i = INICIO(threadID); i < FIM(threadID); i++){
         for (j = 0; j < lista_formigas[i].colunas->tam; j++){
             int coluna = lista_formigas[i].colunas->elem[j];
-            //feromonio[coluna] = feromonio[coluna] + ((double)1.0 / somaCustosFormigas);
+            pthread_mutex_lock(&mutex1);
             feromonio[coluna] = feromonio[coluna] + ((double)1.0 / lista_formigas[i].custo_total);
+            pthread_mutex_unlock(&mutex1);
         }
     }
 }
 
-void atualizarFeromonio(){
-    evaporarFeromonio();
-    depositarFeromonio();
+void atualizarFeromonio(int threadID){
+    evaporarFeromonio(threadID);
+    depositarFeromonio(threadID);
 }
 
-void ant_colony(instancia_t inst){
-    instancia = inst;
-    inicializarVariaveis();
-    inicializarFeromonio();
+void *ant_colony(void *arg){
+    int threadID = *((int *) arg);
+    free(arg);
+
+    inicializarVariaveis(threadID);
 
     int i;
     for (i = 0; i < n_ciclos; ++i){
         VERBOSE("Ciclo: %d\n", i);
-        construirSolucoesFormigas();
-        atualizarFeromonio();
-        resetarFormigas();
-        VERBOSE("Melhor Formiga: %d\n", melhor_formiga.custo_total);
+
+        pthread_barrier_wait(&b1);
+        construirSolucoesFormigas(threadID);
+        atualizarFeromonio(threadID);
+        resetarFormigas(threadID);
+
+        VERBOSE("Melhor Formiga para thread %d: %d\n", threadID, melhor_formiga_thread[threadID].custo_total);
         VERBOSE("-------------------------\n");
     }
 
-    printf("\nMelhor Formiga: %d\n", melhor_formiga.custo_total);
+    // executar uma funcao que esta dentro de uma thread apenas uma vez para todas threads
+    //precisa de lock?
+    //precisa de um lock quando é só uma escrita?
+    if (melhor_formiga_thread[threadID].custo_total < melhor_formiga.custo_total){
+        melhor_formiga = melhor_formiga_thread[threadID];
+    }
+
+    return NULL;
 }
 
 void inicializar_parametros(){
@@ -244,4 +263,22 @@ void inicializar_parametros(){
     n_formigas = 20;
     n_ciclos = 15;
     n_thread = 2;
+}
+
+void inicializarFeromonio(){
+    int i;
+    for (i = 0; i < instancia.c; i++){
+        feromonio[i] = q0;
+    }
+}
+
+void inicializar_aco(){
+    lista_formigas = (formiga_t*)(malloc(n_formigas * sizeof(formiga_t)));
+    melhor_formiga.custo_total = INT_MAX;
+    melhor_formiga_thread = (formiga_t*) malloc(n_thread * sizeof(formiga_t));
+    feromonio = (double*)(malloc(instancia.c * sizeof(double)));
+
+    formiga_por_thread = n_formigas / n_thread;
+
+    inicializarFeromonio();
 }

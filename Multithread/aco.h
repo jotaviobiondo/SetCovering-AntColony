@@ -2,6 +2,7 @@
 #define ACO_H
 
 #include "lista.h"
+#include <pthread.h>
 
 /* STRUCT DA INSTANCIA DO PROBLEMA */
 struct Instancia{
@@ -36,9 +37,17 @@ extern int n_ciclos;
 
 extern int n_thread;
 
+extern formiga_t melhor_formiga;
+
+extern instancia_t instancia;
+
+extern pthread_barrier_t b1;
+extern pthread_barrier_t b2;
+
 /* FUNÇÔES */
 
-void ant_colony(instancia_t inst);
+void *ant_colony(void *arg);
 void inicializar_parametros();
+void inicializar_aco();
 
 #endif

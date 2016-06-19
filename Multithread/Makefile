@@ -1,6 +1,6 @@
 CC     = gcc
 CFLAGS = -Wall -Wno-unused-result -O2
-LDFLAGS = -lm
+LDFLAGS = -lm -lpthread
 RM     = rm
 #------------------------------------------------
 
