@@ -34,9 +34,13 @@ extern double q0;       // Ferômonio inicial
 extern int n_formigas;
 extern int n_ciclos;
 
+extern formiga_t melhor_formiga;
+
+extern instancia_t instancia;
+
 /* FUNÇÔES */
 
-void ant_colony(instancia_t inst);
+void ant_colony();
 void inicializar_parametros();
 
 #endif

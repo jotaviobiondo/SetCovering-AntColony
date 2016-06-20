@@ -216,8 +216,7 @@ void atualizarFeromonio(){
     depositarFeromonio();
 }
 
-void ant_colony(instancia_t inst){
-    instancia = inst;
+void ant_colony(){
     inicializarVariaveis();
     inicializarFeromonio();
 
@@ -240,5 +239,5 @@ void inicializar_parametros(){
     rho = 0.4;
     q0 = 1.0;
     n_formigas = 20;
-    n_ciclos = 15;
+    n_ciclos = 20;
 }

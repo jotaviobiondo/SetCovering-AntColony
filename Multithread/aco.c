@@ -27,14 +27,13 @@ int n_thread;
 int formiga_por_thread;
 
 formiga_t *lista_formigas;
-formiga_t melhor_formiga;    // Melhor formiga global
+formiga_t melhor_formiga;            // Melhor formiga global
 formiga_t *melhor_formiga_thread;    // Melhor formiga para cada thread
-double *feromonio;                  // vetor do feromonio depositado em cada coluna
+double *feromonio;                   // vetor do feromonio depositado em cada coluna
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_barrier_t b1;
-pthread_barrier_t b2;
 
 void inicializarFormiga(formiga_t *formiga){
     formiga->colunas = lista_criar();
@@ -191,7 +190,6 @@ void resetarFormigas(int threadID){
     }
 }
 
-//verificar aqui
 void evaporarFeromonio(int threadID){
     int i;
     int bloco = instancia.c / n_thread;
@@ -208,7 +206,6 @@ void evaporarFeromonio(int threadID){
     }
 }
 
-//verificar aqui
 void depositarFeromonio(int threadID){
     int i, j;
     for (i = INICIO(threadID); i < FIM(threadID); i++){
@@ -234,23 +231,21 @@ void *ant_colony(void *arg){
 
     int i;
     for (i = 0; i < n_ciclos; ++i){
-        VERBOSE("Ciclo: %d\n", i);
-
         pthread_barrier_wait(&b1);
         construirSolucoesFormigas(threadID);
         atualizarFeromonio(threadID);
         resetarFormigas(threadID);
 
+        VERBOSE("Ciclo: %d\n", i);
         VERBOSE("Melhor Formiga para thread %d: %d\n", threadID, melhor_formiga_thread[threadID].custo_total);
         VERBOSE("-------------------------\n");
     }
 
-    // executar uma funcao que esta dentro de uma thread apenas uma vez para todas threads
-    //precisa de lock?
-    //precisa de um lock quando é só uma escrita?
+    pthread_mutex_lock(&mutex2);
     if (melhor_formiga_thread[threadID].custo_total < melhor_formiga.custo_total){
         melhor_formiga = melhor_formiga_thread[threadID];
     }
+    pthread_mutex_unlock(&mutex2);
 
     return NULL;
 }
@@ -261,7 +256,7 @@ void inicializar_parametros(){
     rho = 0.4;
     q0 = 1.0;
     n_formigas = 20;
-    n_ciclos = 15;
+    n_ciclos = 20;
     n_thread = 2;
 }
 

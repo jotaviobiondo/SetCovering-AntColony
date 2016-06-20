@@ -6,7 +6,7 @@
 #include "aco.h"
 #include "util.h"
 
-char *nomeArquivo;
+char *nomeArquivo = "scp41.txt";
 
 instancia_t lerArquivo(char *nome){
 	int i, j;
@@ -73,12 +73,12 @@ void mostrarAjuda(){
 	printf("\n\
 	Uso: ./aco <nome_arquivo.txt> <opcoes>\n\
 	-h, --help                  mostra tela de ajuda.\n\
-	-v, --verbose               mostra informações detalhadas no decorrer do programa.\n\
+	-v, --verbose               mostra informacoes detalhadas no decorrer do programa.\n\
 	-a, --alfa=ALFA             [%.2f] seta a variavel alfa (importancia do feromonio) do algoritmo.\n\
 	-b, --beta=BETA             [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
 	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
 	-f, --formigas=FORMIGAS     [%d] seta o numero de formigas do algoritmo.\n\
-	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n", alfa, beta, rho, n_formigas, n_ciclos) ;
+	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n\n", alfa, beta, rho, n_formigas, n_ciclos) ;
 	exit(-1);
 }
 
@@ -134,33 +134,33 @@ void lerArgumentos(int argc, char *argv[]){
 	}
 }
 
+void inicializarInstancia(){
+    char caminho[32] = "../Instancias/";
+    strcat(caminho, nomeArquivo);
+
+    instancia = lerArquivo(caminho);
+
+    VERBOSE("\nDados da instancia:\n");
+    VERBOSE("Arquivo: %s\nLinhas: %d\nColunas: %d\n", nomeArquivo, instancia.l, instancia.c);
+    VERBOSE("\nParametros:\n");
+    VERBOSE("Alfa = %.2f\n", alfa);
+    VERBOSE("Beta = %.2f\n", beta);
+    VERBOSE("Rho = %.2f\n", rho);
+    VERBOSE("Numero de formigas = %d\n", n_formigas);
+    VERBOSE("Numero de ciclos = %d\n\n", n_ciclos);
+}
+
 int main(int argc, char *argv[]){
 	srand((unsigned)time(NULL));
-	/*timeval t1;
-	gettimeofday(&t1, NULL);
-	srand(t1.tv_usec * t1.tv_sec);*/
-	//printf("%lf\n", random_double());
-	//printf("%d\n", random_int(10));
-
 	verbose = false;
+
 	inicializar_parametros();
+    
 	lerArgumentos(argc, argv);
 
-	char caminho[32] = "../Instancias/";
-	strcat(caminho, nomeArquivo);
+	inicializarInstancia();
 
-	instancia_t instancia = lerArquivo(caminho);
-
-	VERBOSE("\nDados da instancia:\n");
-	VERBOSE("Arquivo: %s\nLinhas: %d\nColunas: %d\n", nomeArquivo, instancia.l, instancia.c);
-	VERBOSE("\nParametros:\n");
-	VERBOSE("Alfa = %.2f\n", alfa);
-	VERBOSE("Beta = %.2f\n", beta);
-	VERBOSE("Rho = %.2f\n", rho);
-	VERBOSE("Numero de formigas = %d\n", n_formigas);
-	VERBOSE("Numero de ciclos = %d\n\n", n_ciclos);
-
-	ant_colony(instancia);
+	ant_colony();
 	
 	return 0;
 }

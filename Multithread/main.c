@@ -75,7 +75,7 @@ void mostrarAjuda(){
 	printf("\n\
 	Uso: ./aco <nome_arquivo.txt> <opcoes>\n\
 	-h, --help                  mostra tela de ajuda.\n\
-	-v, --verbose               mostra informações detalhadas no decorrer do programa.\n\
+	-v, --verbose               mostra informacoes detalhadas no decorrer do programa.\n\
 	-a, --alfa=ALFA             [%.2f] seta a variavel alfa (importancia do feromonio) do algoritmo.\n\
 	-b, --beta=BETA             [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
 	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
@@ -164,11 +164,11 @@ void inicializarInstancia(){
 void inicializarThreads(){
 	thread = (pthread_t*) (malloc(n_thread * sizeof(pthread_t)));
 	pthread_barrier_init(&b1, NULL, n_thread);
-	pthread_barrier_init(&b2, NULL, n_thread);
 }
 
 int main(int argc, char *argv[]){
 	srand((unsigned)time(NULL));
+	verbose = false;
 
 	inicializar_parametros();
 

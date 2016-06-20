@@ -42,7 +42,6 @@ extern formiga_t melhor_formiga;
 extern instancia_t instancia;
 
 extern pthread_barrier_t b1;
-extern pthread_barrier_t b2;
 
 /* FUNÇÔES */
 
