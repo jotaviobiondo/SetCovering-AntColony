@@ -50,6 +50,11 @@ void inicializarVariaveis(){
     feromonio = (double*)(malloc(instancia.c * sizeof(double)));
 }
 
+void freeVariaveis(){
+    free(lista_formigas);
+    free(feromonio);
+}
+
 void inicializarFeromonio(){
     int i;
     for (i = 0; i < instancia.c; i++){
@@ -231,6 +236,8 @@ void ant_colony(){
     }
 
     printf("\nMelhor Formiga: %d\n", melhor_formiga.custo_total);
+
+    freeVariaveis();
 }
 
 void inicializar_parametros(){

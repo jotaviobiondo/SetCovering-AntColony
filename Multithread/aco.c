@@ -260,6 +260,7 @@ void inicializar_parametros(){
     n_thread = 2;
 }
 
+//paralelizar isso
 void inicializarFeromonio(){
     int i;
     for (i = 0; i < instancia.c; i++){
@@ -276,4 +277,10 @@ void inicializar_aco(){
     formiga_por_thread = n_formigas / n_thread;
 
     inicializarFeromonio();
+}
+
+void free_aco(){
+    free(lista_formigas);
+    free(melhor_formiga_thread);
+    free(feromonio);
 }

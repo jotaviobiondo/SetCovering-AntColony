@@ -150,17 +150,33 @@ void inicializarInstancia(){
     VERBOSE("Numero de ciclos = %d\n\n", n_ciclos);
 }
 
+void freeInstancia(){
+	free(instancia.custo);
+	free(instancia.nlinhas);
+	free(instancia.ncolunas);
+
+	int i;
+	for(i = 0; i < instancia.l; i++)
+		free(instancia.linha[i]);
+
+	for(i = 0; i < instancia.c; i++)
+		free(instancia.coluna[i]);
+
+	free(instancia.linha);
+	free(instancia.coluna);
+}
+
 int main(int argc, char *argv[]){
 	srand((unsigned)time(NULL));
 	verbose = false;
 
 	inicializar_parametros();
-    
 	lerArgumentos(argc, argv);
-
 	inicializarInstancia();
-
+	
 	ant_colony();
+
+	freeInstancia();
 	
 	return 0;
 }

@@ -161,9 +161,29 @@ void inicializarInstancia(){
 	VERBOSE("Numero de ciclos = %d\n\n", n_ciclos);
 }
 
+void freeInstancia(){
+	free(instancia.custo);
+	free(instancia.nlinhas);
+	free(instancia.ncolunas);
+
+	int i;
+	for(i = 0; i < instancia.l; i++)
+		free(instancia.linha[i]);
+
+	for(i = 0; i < instancia.c; i++)
+		free(instancia.coluna[i]);
+
+	free(instancia.linha);
+	free(instancia.coluna);
+}
+
 void inicializarThreads(){
 	thread = (pthread_t*) (malloc(n_thread * sizeof(pthread_t)));
 	pthread_barrier_init(&b1, NULL, n_thread);
+}
+
+void freeThreads(){
+	free(thread);
 }
 
 int main(int argc, char *argv[]){
@@ -171,13 +191,9 @@ int main(int argc, char *argv[]){
 	verbose = false;
 
 	inicializar_parametros();
-
 	lerArgumentos(argc, argv);
-
 	inicializarInstancia();
-	
 	inicializarThreads();
-
 	inicializar_aco();
 
 	int i;
@@ -192,6 +208,10 @@ int main(int argc, char *argv[]){
 	}
 
 	printf("\nMelhor Formiga: %d\n", melhor_formiga.custo_total);
+
+	freeInstancia();
+	freeThreads();
+	free_aco();
 	
 	return 0;
 }

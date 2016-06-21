@@ -48,5 +48,6 @@ extern pthread_barrier_t b1;
 void *ant_colony(void *arg);
 void inicializar_parametros();
 void inicializar_aco();
+void free_aco();
 
 #endif
