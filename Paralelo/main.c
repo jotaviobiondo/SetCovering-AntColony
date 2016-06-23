@@ -74,14 +74,15 @@ instancia_t lerArquivo(char *nome){
 void mostrarAjuda(){
 	printf("\n\
 	Uso: ./aco <nome_arquivo.txt> <opcoes>\n\
-	-h, --help                  mostra tela de ajuda.\n\
-	-v, --verbose               mostra informacoes detalhadas no decorrer do programa.\n\
-	-a, --alfa=ALFA             [%.2f] seta a variavel alfa (importancia do feromonio) do algoritmo.\n\
-	-b, --beta=BETA             [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
-	-r, --rho=RHO               [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
-	-f, --formigas=FORMIGAS     [%d] seta o numero de formigas do algoritmo.\n\
-	-t, --thread=THREAD         [%d] seta o numero de threads do programa.\n\
-	-c, --ciclos=CICLOS         [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n\n", alfa, beta, rho, n_formigas, n_thread, n_ciclos) ;
+	-h, --help                      mostra tela de ajuda.\n\
+	-v, --verbose                   mostra informacoes detalhadas no decorrer do programa.\n\
+	-p, --usar_barreira_pthread     usa a barreira da biblioteca pthread.h em vez da Tree Barrier.\n\
+	-a, --alfa=ALFA                 [%.2f] seta a variavel alfa (importancia do feromonio) do algoritmo.\n\
+	-b, --beta=BETA                 [%.2f] seta a variavel beta (importancia da heuristica) do algoritmo.\n\
+	-r, --rho=RHO                   [%.2f] seta a variavel rho (taxa de evaporacao do feromonio) do algoritmo.\n\
+	-f, --formigas=FORMIGAS         [%d] seta o numero de formigas do algoritmo.\n\
+	-t, --thread=THREAD             [%d] seta o numero de threads do programa.\n\
+	-c, --ciclos=CICLOS             [%d] seta o numero de ciclos da condicao de parada do algoritmo.\n\n", alfa, beta, rho, n_formigas, n_thread, n_ciclos) ;
 	exit(-1);
 }
 
@@ -95,6 +96,7 @@ void lerArgumentos(int argc, char *argv[]){
 	const struct option opcoes[] = {
 		{"help", no_argument, 0, 'h'},
 		{"verbose", no_argument, 0, 'v'},
+		{"usar_barreira_pthread", no_argument, 0, 'p'},
 		{"alfa", required_argument, 0, 'a'},
 		{"beta", required_argument, 0, 'b'},
 		{"rho", required_argument, 0, 'r'},
@@ -104,13 +106,16 @@ void lerArgumentos(int argc, char *argv[]){
 		{0, 0, 0, 0},
 	};
 
-	while((opt = getopt_long(argc, argv, "hva:b:r:f:t:c:", opcoes, NULL)) != -1) {
+	while((opt = getopt_long(argc, argv, "hvpa:b:r:f:t:c:", opcoes, NULL)) != -1) {
 		switch (opt) {
 			case 'h':
 				mostrarAjuda();
 				break;
 			case 'v':
 				verbose = true;
+				break;
+			case 'p':
+				usar_barreira_pthread = true;
 				break;
 			case 'a':
 				alfa = atof(optarg);
@@ -179,7 +184,11 @@ void freeInstancia(){
 
 void inicializarThreads(){
 	thread = (pthread_t*) (malloc(n_thread * sizeof(pthread_t)));
-	pthread_barrier_init(&b1, NULL, n_thread);
+	if (usar_barreira_pthread){
+		pthread_barrier_init(&pbarrier, NULL, n_thread);
+	} else {
+		tbarrier = tree_barrier_create(n_thread);
+	}
 }
 
 void freeThreads(){
@@ -189,6 +198,7 @@ void freeThreads(){
 int main(int argc, char *argv[]){
 	srand((unsigned)time(NULL));
 	verbose = false;
+	usar_barreira_pthread = false;
 
 	inicializar_parametros();
 	lerArgumentos(argc, argv);

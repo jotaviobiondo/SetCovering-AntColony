@@ -1,2 +1,2 @@
-# Ant Colony Optimization Multithread
-Algoritmo ACO utilizando multithread para a resolução do problema de cobertura de conjuntos (set cover problem).
+# Ant Colony Optimization Paralelo
+Algoritmo ACO paralelizado para a resolução do problema de cobertura de conjuntos (set cover problem).

@@ -2,7 +2,9 @@
 #define ACO_H
 
 #include "lista.h"
+#include "tbarrier.h"
 #include <pthread.h>
+#include <stdbool.h>
 
 /* STRUCT DA INSTANCIA DO PROBLEMA */
 struct Instancia{
@@ -41,7 +43,10 @@ extern formiga_t melhor_formiga;
 
 extern instancia_t instancia;
 
-extern pthread_barrier_t b1;
+extern pthread_barrier_t pbarrier;
+extern tree_barrier_t *tbarrier;
+
+extern bool usar_barreira_pthread;
 
 /* FUNÇÔES */
 

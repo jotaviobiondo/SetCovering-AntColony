@@ -33,7 +33,10 @@ double *feromonio;                   // vetor do feromonio depositado em cada co
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-pthread_barrier_t b1;
+
+pthread_barrier_t pbarrier;
+tree_barrier_t *tbarrier;
+bool usar_barreira_pthread;
 
 void inicializarFormiga(formiga_t *formiga){
     formiga->colunas = lista_criar();
@@ -228,10 +231,16 @@ void *ant_colony(void *arg){
     free(arg);
 
     inicializarVariaveis(threadID);
+    bool threadSense = true;
 
     int i;
     for (i = 0; i < n_ciclos; ++i){
-        pthread_barrier_wait(&b1);
+        if (usar_barreira_pthread){
+            pthread_barrier_wait(&pbarrier);
+        } else {
+            tree_barrier_await(tbarrier, threadID, &threadSense);
+        }
+
         construirSolucoesFormigas(threadID);
         atualizarFeromonio(threadID);
         resetarFormigas(threadID);
