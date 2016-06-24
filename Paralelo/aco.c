@@ -264,7 +264,7 @@ void inicializar_parametros(){
     beta = 0.8;
     rho = 0.4;
     q0 = 1.0;
-    n_formigas = 100;
+    n_formigas = 128;
     n_ciclos = 20;
     n_thread = 2;
 }

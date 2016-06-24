@@ -189,6 +189,8 @@ void inicializarThreads(){
 	} else {
 		tbarrier = tree_barrier_create(n_thread);
 	}
+	pthread_mutex_init(&mutex1, NULL);
+	pthread_mutex_init(&mutex2, NULL);
 }
 
 void freeThreads(){

@@ -43,9 +43,11 @@ extern formiga_t melhor_formiga;
 
 extern instancia_t instancia;
 
+extern pthread_mutex_t mutex1;
+extern pthread_mutex_t mutex2;
+
 extern pthread_barrier_t pbarrier;
 extern tree_barrier_t *tbarrier;
-
 extern bool usar_barreira_pthread;
 
 /* FUNÇÔES */
