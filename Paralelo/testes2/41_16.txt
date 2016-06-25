@@ -1,0 +1,30 @@
+
+Melhor Formiga: 433
+
+real	0m38.202s
+user	1m16.292s
+sys	0m0.000s
+
+Melhor Formiga: 433
+
+real	0m38.143s
+user	1m16.204s
+sys	0m0.000s
+
+Melhor Formiga: 432
+
+real	0m37.948s
+user	1m15.832s
+sys	0m0.000s
+
+Melhor Formiga: 432
+
+real	0m38.049s
+user	1m16.020s
+sys	0m0.008s
+
+Melhor Formiga: 433
+
+real	0m38.154s
+user	1m16.240s
+sys	0m0.004s

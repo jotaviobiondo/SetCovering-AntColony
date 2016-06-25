@@ -1,12 +1,30 @@
 
-Melhor Formiga: 212
+Melhor Formiga: 214
 
-real	2m11.064s
-user	3m4.824s
-sys	0m0.496s
+real	1m57.978s
+user	3m55.228s
+sys	0m0.000s
 
 Melhor Formiga: 214
 
-real	2m20.132s
-user	3m5.996s
-sys	0m0.416s
+real	2m0.269s
+user	3m59.452s
+sys	0m0.004s
+
+Melhor Formiga: 212
+
+real	1m58.230s
+user	3m55.804s
+sys	0m0.000s
+
+Melhor Formiga: 213
+
+real	1m58.254s
+user	3m55.736s
+sys	0m0.004s
+
+Melhor Formiga: 214
+
+real	1m57.085s
+user	3m53.572s
+sys	0m0.000s

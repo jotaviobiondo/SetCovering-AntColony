@@ -1,0 +1,6 @@
+
+Melhor Formiga: 61
+
+real	36m45.541s
+user	36m45.444s
+sys	0m0.008s

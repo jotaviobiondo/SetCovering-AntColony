@@ -1,30 +1,30 @@
 
-Melhor Formiga: 443
+Melhor Formiga: 433
 
-real	0m1.107s
-user	0m1.096s
+real	4m6.717s
+user	4m6.700s
 sys	0m0.000s
 
-Melhor Formiga: 439
+Melhor Formiga: 431
 
-real	0m1.071s
-user	0m1.064s
+real	2m14.734s
+user	2m14.720s
+sys	0m0.008s
+
+Melhor Formiga: 431
+
+real	4m6.642s
+user	4m6.624s
+sys	0m0.004s
+
+Melhor Formiga: 430
+
+real	2m14.834s
+user	2m14.828s
 sys	0m0.000s
 
-Melhor Formiga: 445
+Melhor Formiga: 432
 
-real	0m1.449s
-user	0m1.444s
-sys	0m0.000s
-
-Melhor Formiga: 451
-
-real	0m1.614s
-user	0m1.608s
-sys	0m0.000s
-
-Melhor Formiga: 449
-
-real	0m1.105s
-user	0m1.100s
-sys	0m0.000s
+real	4m7.028s
+user	4m7.008s
+sys	0m0.008s

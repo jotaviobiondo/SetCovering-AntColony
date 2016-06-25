@@ -1,0 +1,30 @@
+
+Melhor Formiga: 62
+
+real	10m21.744s
+user	20m40.712s
+sys	0m0.004s
+
+Melhor Formiga: 62
+
+real	10m19.452s
+user	20m36.804s
+sys	0m0.000s
+
+Melhor Formiga: 62
+
+real	10m21.308s
+user	20m39.988s
+sys	0m0.004s
+
+Melhor Formiga: 62
+
+real	10m22.606s
+user	20m41.572s
+sys	0m0.012s
+
+Melhor Formiga: 61
+
+real	10m21.287s
+user	20m37.900s
+sys	0m0.008s
