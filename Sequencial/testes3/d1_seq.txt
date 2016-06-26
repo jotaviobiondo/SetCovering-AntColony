@@ -1,0 +1,60 @@
+
+Melhor Formiga: 62
+
+real	26m46.904s
+user	26m46.856s
+sys	0m0.004s
+
+Melhor Formiga: 61
+
+real	20m40.515s
+user	20m40.484s
+sys	0m0.004s
+
+Melhor Formiga: 62
+
+real	20m37.899s
+user	20m37.868s
+sys	0m0.004s
+
+Melhor Formiga: 61
+
+real	37m39.691s
+user	37m39.604s
+sys	0m0.008s
+
+Melhor Formiga: 62
+
+real	20m26.513s
+user	20m26.480s
+sys	0m0.008s
+
+Melhor Formiga: 62
+
+real	37m48.842s
+user	37m48.744s
+sys	0m0.024s
+
+Melhor Formiga: 62
+
+real	20m38.278s
+user	20m38.248s
+sys	0m0.004s
+
+Melhor Formiga: 61
+
+real	37m54.958s
+user	37m54.880s
+sys	0m0.000s
+
+Melhor Formiga: 61
+
+real	20m35.951s
+user	20m35.356s
+sys	0m0.124s
+
+Melhor Formiga: 62
+
+real	34m21.007s
+user	34m15.536s
+sys	0m0.380s

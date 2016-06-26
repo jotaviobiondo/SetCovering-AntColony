@@ -1,0 +1,60 @@
+
+Melhor Formiga: 433
+
+real	1m16.550s
+user	1m16.524s
+sys	0m0.004s
+
+Melhor Formiga: 433
+
+real	1m16.103s
+user	1m16.096s
+sys	0m0.004s
+
+Melhor Formiga: 430
+
+real	1m38.351s
+user	1m38.340s
+sys	0m0.000s
+
+Melhor Formiga: 432
+
+real	1m16.147s
+user	1m16.140s
+sys	0m0.000s
+
+Melhor Formiga: 430
+
+real	1m16.132s
+user	1m16.120s
+sys	0m0.000s
+
+Melhor Formiga: 433
+
+real	2m18.476s
+user	2m18.468s
+sys	0m0.000s
+
+Melhor Formiga: 433
+
+real	1m16.196s
+user	1m16.188s
+sys	0m0.000s
+
+Melhor Formiga: 433
+
+real	2m18.188s
+user	2m18.176s
+sys	0m0.004s
+
+Melhor Formiga: 433
+
+real	1m16.172s
+user	1m16.164s
+sys	0m0.000s
+
+Melhor Formiga: 431
+
+real	2m17.358s
+user	2m17.348s
+sys	0m0.000s
